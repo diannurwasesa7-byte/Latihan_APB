@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Detail Transaksi{% endblock %}
+{% block content %}
+
+<h3>Detail Transaksi</h3> <table class="table table-bordered"> <thead> <tr> <th>Produk</th> <th>Jumlah</th> <th>Harga</th> <th>Subtotal</th> </tr> </thead> <tbody> {% for item in items %} <tr> <td>{{ item.produk.nama }}</td> <td>{{ item.jumlah }}</td> <td>Rp {{ item.produk.harga|floatformat:"0" }}</td> <td>Rp {{ item.subtotal|floatformat:"0" }}</td> </tr> {% endfor %} <tr> <td colspan="3" class="text-end"><strong>Total</strong></td> <td><strong>Rp {{ transaksi.total|floatformat:"0" }}</strong></td> </tr> </tbody> </table> <p><strong>Tanggal:</strong> {{ transaksi.tanggal|date:"d M Y H:i" }}</p> <p><strong>Kasir:</strong> {{ transaksi.kasir.username }}</p> <div class="d-flex justify-content-end mt-3 no-print"> <button class="btn btn-success" onclick="window.print()">Cetak</button> </div> {% endblock %}

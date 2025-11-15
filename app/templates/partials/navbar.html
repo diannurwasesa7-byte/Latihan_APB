@@ -1,0 +1,141 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-shop"></i> SEMBAKOKU
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        {% if request.user.is_authenticated %}
+          {% if request.user.groups.first.name == "Kasir" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home_kasir' %}">
+                <i class="bi bi-house-door"></i> Home
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-cart-check"></i> Transaksi
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{% url 'tambah_transaksi' %}">
+                    <i class="bi bi-plus-circle"></i> Tambah Transaksi
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'cetak_transaksi' %}">
+                    <i class="bi bi-printer"></i> Cetak Transaksi
+                  </a>
+                </li>
+               <li>
+                  <a class="dropdown-item" href="{% url 'history_transaksi' %}">
+                    <i class="bi bi-clock-history"></i> History Hari Ini
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+
+          {% elif request.user.groups.first.name == "Bos" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home_admin' %}">
+                <i class="bi bi-house-door"></i> Home
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-box-seam"></i> Produk
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{% url 'produk_list' %}">
+                    <i class="bi bi-search"></i> Cek Produk
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'tambah_produk' %}">
+                    <i class="bi bi-plus-circle"></i> Tambah Produk
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-clipboard-data"></i> Laporan
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'laporan_harian' %}"
+                  >
+                    <i class="bi bi-calendar-day"></i> Cetak Harian
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'laporan_mingguan' %}"
+                  >
+                    <i class="bi bi-calendar-week"></i> Cetak Mingguan
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'laporan_bulanan' %}"
+                  >
+                    <i class="bi bi-calendar-month"></i> Cetak Bulanan
+                  </a>
+                </li>
+              </ul>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-light">
+              <i class="bi bi-person-circle"></i>
+              {{ request.user.username }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="{% url 'logout' %}">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+              <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

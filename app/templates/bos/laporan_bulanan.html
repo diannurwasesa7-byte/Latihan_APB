@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}LAPORAN BULANAN{% endblock %}
+{% block content %}
+
+<style> @media print { .no-print { display: none !important; } } </style> <h3>Laporan Bulanan</h3> <table class="table table-bordered"> <thead class="table-light"> <tr> <th>No</th> <th>Kasir</th> <th>Tanggal</th> <th>Total</th> </tr> </thead> <tbody> {% for t in transaksi %} <tr> <td>{{ forloop.counter }}</td> <td>{{ t.kasir.username }}</td> <td>{{ t.tanggal|date:"d M Y H:i" }}</td> <td>Rp {{ t.total|floatformat:0 }}</td> </tr> {% empty %} <tr> <td colspan="4" class="text-center text-muted">Tidak ada transaksi.</td> </tr> {% endfor %} </tbody> </table> <div class="d-flex justify-content-end mt-3 no-print"> <button class="btn btn-success" onclick="window.print()"> <i class="bi bi-printer"></i> Cetak </button> </div>
+{% endblock %}

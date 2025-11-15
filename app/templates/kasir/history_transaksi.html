@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}History Transaksi Hari Ini{% endblock %}
+{% block content %}
+
+<h3>History Transaksi Hari Ini</h3>
+{% if transaksi %}
+
+<table class="table table-bordered"> <thead> <tr> <th>No</th> <th>Waktu</th> <th>Total</th> <th>Aksi</th> </tr> </thead> <tbody> {% for t in transaksi %} <tr> <td>{{ forloop.counter }}</td> <td>{{ t.tanggal|date:"d M Y H:i" }}</td> <td>Rp {{ t.total|floatformat:"0" }}</td> <td><a href="{% url 'detail_transaksi_kasir' t.id %}" class="btn btn-sm btn-primary">Lihat Detail</a></td> </tr> {% endfor %} </tbody> </table> {% else %} <p class="text-muted">Belum ada transaksi hari ini.</p> {% endif %} {% endblock %}

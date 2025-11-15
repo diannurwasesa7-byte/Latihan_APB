@@ -1,0 +1,5 @@
+Migrations for 'app':
+  app\migrations\0001_initial.py
+    - Create model Produk
+    - Create model Transaksi
+    - Create model ItemTransaksi

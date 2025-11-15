@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<h3>Tambah Transaksi</h3>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-danger">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Nama Kasir</label>
+        <input type="text" name="kasir" class="form-control" value="{{ request.user.username }}" readonly>
+    </div>
+
+    <table class="table table-bordered" id="transaksi-table">
+        <thead>
+            <tr>
+                <th>Produk</th>
+                <th>Jumlah</th>
+                <th>Harga</th>
+                <th>Subtotal</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="produk-body">
+            <tr>
+                <td>
+                    <select name="produk_id" class="form-control select2" onchange="updateHarga(this)">
+                        <option value="">-- Pilih Produk --</option>
+                        {% for p in produk %}
+                        <option value="{{ p.id }}" data-harga="{{ p.harga }}">{{ p.nama }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td><input type="number" name="jumlah" class="form-control" min="1" oninput="updateSubtotal(this)"></td>
+                <td class="harga">Rp 0</td>
+                <td class="subtotal">Rp 0</td>
+                <td><button type="button" class="btn btn-danger" onclick="hapusBaris(this)">Hapus</button></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-end"><strong>Total</strong></td>
+                <td colspan="2"><strong id="total-harga">Rp 0</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <button type="button" class="btn btn-secondary" onclick="tambahBaris()">+ Tambah Produk</button><br><br>
+    <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
+</form>
+
+<!-- jQuery & Select2 JS (offline via CDN) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+function tambahBaris() {
+    let row = document.querySelector('#produk-body tr');
+
+    // Destroy Select2 di baris lama sebelum clone
+    $(row).find('select.select2').select2('destroy');
+
+    let clone = row.cloneNode(true);
+
+    // Reset nilai input & select di baris baru
+    clone.querySelectorAll('select, input').forEach(el => {
+        el.value = '';
+    });
+    clone.querySelector('.harga').innerText = 'Rp 0';
+    clone.querySelector('.subtotal').innerText = 'Rp 0';
+
+    document.getElementById('produk-body').appendChild(clone);
+
+    // Re-inisialisasi select2 di baris lama dan baru
+    $(row).find('select.select2').select2({
+        width: '100%',
+        placeholder: "-- Pilih Produk --",
+        closeOnSelect: true
+    }).on('select2:select', function () {
+        $(this).select2('close');
+    });
+
+    $(clone).find('select.select2').select2({
+        width: '100%',
+        placeholder: "-- Pilih Produk --",
+        closeOnSelect: true
+    }).on('select2:select', function () {
+        $(this).select2('close');
+    });
+}
+
+function hapusBaris(btn) {
+    let row = btn.closest('tr');
+    let tbody = document.getElementById('produk-body');
+    if (tbody.rows.length > 1) {
+        row.remove();
+        updateTotal();
+    }
+}
+
+function updateHarga(selectEl) {
+    let harga = selectEl.options[selectEl.selectedIndex].getAttribute('data-harga') || 0;
+    let row = selectEl.closest('tr');
+    row.querySelector('.harga').innerText = 'Rp ' + harga;
+    updateSubtotal(row.querySelector('input[name="jumlah[]"]'));
+}
+
+function updateSubtotal(inputEl) {
+    let row = inputEl.closest('tr');
+    let jumlah = parseInt(inputEl.value || 0);
+    let hargaText = row.querySelector('.harga').innerText.replace(/[^\d]/g, '');
+    let harga = parseInt(hargaText || 0);
+    let subtotal = jumlah * harga;
+    row.querySelector('.subtotal').innerText = 'Rp ' + subtotal.toLocaleString();
+    updateTotal();
+}
+
+function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('.subtotal').forEach(cell => {
+        let val = parseInt(cell.innerText.replace(/[^\d]/g, '') || 0);
+        total += val;
+    });
+    document.getElementById('total-harga').innerText = 'Rp ' + total.toLocaleString();
+}
+
+// Inisialisasi pertama saat halaman dimuat
+$(document).ready(function () {
+    $('.select2').select2({
+        width: '100%',
+        placeholder: "-- Pilih Produk --",
+        closeOnSelect: true
+    }).on('select2:select', function () {
+        $(this).select2('close');
+    });
+});
+</script>
+
+
+
+{% endblock %}

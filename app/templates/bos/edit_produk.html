@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Edit Produk{% endblock %}
+{% block content %}
+
+<h2>Edit Produk</h2> <form method="post"> {% csrf_token %} <div class="mb-3"> <label for="nama">Nama Produk</label> <input type="text" name="nama" id="nama" class="form-control" value="{{ produk.nama }}" required> </div> <div class="mb-3"> <label for="harga">Harga</label> <input type="number" name="harga" id="harga" class="form-control" value="{{ produk.harga }}" required> </div> <div class="mb-3"> <label for="stok">Stok</label> <input type="number" name="stok" id="stok" class="form-control" value="{{ produk.stok }}" required> </div> <button type="submit" class="btn btn-primary">Simpan</button> <a href="{% url 'produk_list' %}" class="btn btn-secondary">Batal</a> </form>
+{% endblock %}

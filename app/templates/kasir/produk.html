@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+
+<h5 class="text-muted">STOK PRODUK ANDA</h5>
+<h2>Data Produk</h2>
+
+<style> @media print { .no-print { display: none !important; 
+} 
+} 
+</style>
+
+
+<!-- Search Bar -->
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-4">
+    <input type="text" name="q" class="form-control" placeholder="Cari nama produk..." value="{{ request.GET.q }}">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-outline-primary">
+      <i class="bi bi-search"></i> Cari
+    </button>
+  </div>
+</form>
+
+<!-- Tabel Produk -->
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th>Nama Produk</th>
+      <th>Harga</th>
+      <th>Stok</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in produk %}
+    <tr>
+      <td>{{ p.nama }}</td>
+      <td>Rp {{ p.harga|intcomma }}</td>
+      <td>{{ p.stok }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="text-center text-muted">Tidak ada produk ditemukan.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{% url 'home_kasir' %}" class="btn btn-secondary">
+  <i class="bi bi-arrow-left-circle"></i> Kembali ke Dashboard
+</a>
+
+{% endblock %}
